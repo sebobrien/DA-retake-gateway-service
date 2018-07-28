@@ -1,0 +1,39 @@
+server:
+ port: 8765
+  
+zuul:
+ ignoredServices: "*"
+ routes:
+   recommendation-service:
+    path: /recommendation-service/**
+    stripPrefix: false
+   review-service:
+    path: /review-service/**
+    stripPrefix: false
+   composite-service:
+    path: /api/**    
+   movie-service:
+    path: /movie-service/**
+    stripPrefix: false
+   service-instance-service:
+    path: /service-instance-service/**
+    stripPrefix: false
+
+eureka:
+ instance:
+  leaseRenewalIntervalInSeconds: 10
+  instanceId: ${vcap.application.instance_id:${spring.application.name}:${spring.application.instance_id:${random.value}}}
+ client: 
+  registryFetchIntervalSeconds: 5 
+    
+---
+
+spring:
+  profiles: docker
+
+eureka:
+ instance:
+  hostname: gateway-service
+ client:
+  serviceUrl:
+   defaultZone: http://eureka-service:8761/eureka/    
